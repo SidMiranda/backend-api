@@ -38,4 +38,10 @@ public class VendedorModel {
 
     // private TipoContratacao tipoContratacao;
 
+    @Column(nullable = true)
+    private Long filialId;  
+    
+    @Transient
+    private FilialModel filial;
+
 }

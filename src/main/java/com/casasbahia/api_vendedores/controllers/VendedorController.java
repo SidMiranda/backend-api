@@ -3,6 +3,8 @@ package com.casasbahia.api_vendedores.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import com.casasbahia.api_vendedores.models.FilialModel;
 import com.casasbahia.api_vendedores.models.VendedorModel;
 import com.casasbahia.api_vendedores.services.VendedorService;
 import org.springframework.web.bind.annotation.*;
@@ -11,22 +13,44 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/vendedor")
+@RequestMapping("/vendedores")
 public class VendedorController {
 
     @Autowired
     private VendedorService vendedorService;
 
-    @PostMapping 
+    @Autowired
+    private FilialController filialController;  
+
+    @PostMapping
+    @ExceptionHandler
     public ResponseEntity<VendedorModel> criarVendedor(@RequestBody VendedorModel vendedor) {
+        
         VendedorModel novoVendedor= vendedorService.criarVendedor(vendedor);
         return new ResponseEntity<>(novoVendedor, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<VendedorModel>> buscarTodos() {
-        List<VendedorModel> vendedores = vendedorService.buscarTodos();
-        return new ResponseEntity<>(vendedores, HttpStatus.OK);
+        
+        try {
+            List<VendedorModel> vendedores = vendedorService.buscarTodos();
+            List<FilialModel> filiais = filialController.getFiliais();
+            
+            for (VendedorModel vendedor : vendedores) {
+                for (FilialModel filial : filiais) {
+                    if (vendedor.getFilialId().equals(filial.getId())) {
+                        vendedor.setFilial(filial);
+                        break;
+                    }
+                }
+            }
+        
+            return new ResponseEntity<>(vendedores, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @GetMapping("/{id}")
@@ -34,6 +58,13 @@ public class VendedorController {
         Optional<VendedorModel> vendedor = vendedorService.buscarPorId(id);
         return vendedor.map(ResponseEntity::ok)
                        .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VendedorModel> atualizarVendedor(@PathVariable Long id, @RequestBody VendedorModel vendedorAtualizado) {
+        vendedorAtualizado.setId(id);
+        VendedorModel vendedor = vendedorService.atualizarVendedor(vendedorAtualizado);
+        return ResponseEntity.ok(vendedor);
     }
 
     @DeleteMapping("/{id}")

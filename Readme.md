@@ -1,8 +1,35 @@
+
+#exemplo de requisicao POST com body Vendedor
+
+POST /vendedores
 {
-    "matricula":"12345674-OUT",
-    "nome":"Alice Miranda",
-    "cpfOuCnpj":"123.456.789-02",
-    "email":"alice.miranda@example.com.br",
-    "tipoContratacao":"PJ",
-    "dataNascimento":"1985-05-15"
+    "matricula":"12345328-CLT",
+    "nome":"Miguel Miranda",
+    "cpfOuCnpj":"122.436.784-01",
+    "email":"miguel.miranda2023@example.com.br",
+    "tipoContratacao":"CLT",
+    "dataNascimento":"1985-05-15",
+    "filialId":"1"
 }
+
+GET /vendedores
+{
+        "id": 2,
+        "matricula": "12345378-CLT",
+        "nome": "Sidney Miranda",
+        "dataNascimento": "1985-05-15",
+        "cpfOuCnpj": "123.436.784-01",
+        "email": "sidney.miranda@example.com.br",
+        "filialId": 2,
+        "filial": {
+            "id": 2,
+            "nome": "Filial 2",
+            "cnpj": "12345678901234",
+            "cidade": "São Paulo",
+            "uf": "SP",
+            "tipo": "Matriz",
+            "ativo": true,
+            "dataCadastro": "2024-08-18",
+            "ultimaAtualizacao": "2024-08-18"
+        }
+    },

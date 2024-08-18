@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.casasbahia.api_vendedores.models.VendedorModel;
 import com.casasbahia.api_vendedores.repositories.VendedorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ public class VendedorService {
     @Autowired
     private VendedorRepository vendedorRepository;
 
+    @ExceptionHandler
     public VendedorModel criarVendedor(VendedorModel vendedor) {
         return vendedorRepository.save(vendedor);
     }
