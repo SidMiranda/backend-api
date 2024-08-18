@@ -36,7 +36,9 @@ public class VendedorModel {
     @Email 
     private String email;
 
-    // private TipoContratacao tipoContratacao;
+    @Column(nullable = false)
+    @NotNull
+    private String tipoContratacao;
 
     @Column(nullable = true)
     private Long filialId;  

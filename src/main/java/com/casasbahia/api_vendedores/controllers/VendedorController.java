@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import com.casasbahia.api_vendedores.models.FilialModel;
 import com.casasbahia.api_vendedores.models.VendedorModel;
 import com.casasbahia.api_vendedores.services.VendedorService;
+import com.casasbahia.api_vendedores.services.MatriculaService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +23,22 @@ public class VendedorController {
     @Autowired
     private FilialController filialController;  
 
+    @Autowired
+    private MatriculaService matriculaService;
+
     @PostMapping
     @ExceptionHandler
     public ResponseEntity<VendedorModel> criarVendedor(@RequestBody VendedorModel vendedor) {
-        
-        VendedorModel novoVendedor= vendedorService.criarVendedor(vendedor);
-        return new ResponseEntity<>(novoVendedor, HttpStatus.CREATED);
+
+        // Gerar a matrícula antes de salvar o vendedor
+        vendedor.setMatricula(matriculaService.gerarMatricula(vendedor.getTipoContratacao()));
+
+        try {
+            VendedorModel novoVendedor = vendedorService.criarVendedor(vendedor);
+            return new ResponseEntity<>(novoVendedor, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping

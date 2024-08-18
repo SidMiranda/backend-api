@@ -3,7 +3,6 @@
 
 POST /vendedores
 {
-    "matricula":"12345328-CLT",
     "nome":"Miguel Miranda",
     "cpfOuCnpj":"122.436.784-01",
     "email":"miguel.miranda2023@example.com.br",
