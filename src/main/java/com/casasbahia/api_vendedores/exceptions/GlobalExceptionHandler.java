@@ -14,20 +14,31 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     // Captura erros de validação de argumentos
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.put(error.getField(), error.getDefaultMessage());
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
+    // @ExceptionHandler(MethodArgumentNotValidException.class)
+    // public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    //     Map<String, String> errors = new HashMap<>();
+    //     ex.getBindingResult().getFieldErrors().forEach(error -> {
+    //         errors.put(error.getField(), error.getDefaultMessage());
+    //     });
+    //     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    // }
 
     // Captura exceções genéricas
     @ExceptionHandler(Exception.class)public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        
+        ex.getBindingResult().getFieldErrors().forEach(error -> 
+            errors.put(error.getField(), error.getDefaultMessage())
+        );
+        
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }
 

@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import com.casasbahia.api_vendedores.models.FilialModel;
 import com.casasbahia.api_vendedores.models.VendedorModel;
 import com.casasbahia.api_vendedores.services.VendedorService;
+
 import com.casasbahia.api_vendedores.services.MatriculaService;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +29,7 @@ public class VendedorController {
     private MatriculaService matriculaService;
 
     @PostMapping
-    @ExceptionHandler
-    public ResponseEntity<VendedorModel> criarVendedor(@RequestBody VendedorModel vendedor) {
+    public ResponseEntity<VendedorModel> criarVendedor(@RequestBody VendedorModel vendedor){
 
         // Gerar a matrícula antes de salvar o vendedor
         vendedor.setMatricula(matriculaService.gerarMatricula(vendedor.getTipoContratacao()));

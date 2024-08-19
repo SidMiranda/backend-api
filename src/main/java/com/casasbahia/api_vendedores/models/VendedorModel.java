@@ -21,26 +21,27 @@ public class VendedorModel {
     private String matricula;
 
     @Column(nullable = false)
-    @NotNull 
+    @NotNull(message = "O campo nome é obrigatório") 
     private String nome;
 
     @Column 
     private LocalDate dataNascimento;
 
     @Column(nullable = false, unique = true)
-    @NotNull 
+    @NotNull(message = "O campo cpfOuCnpj é obrigatório") 
     private String cpfOuCnpj;
 
     @Column(nullable = false, unique = true)
-    @NotNull 
+    @NotNull(message = "O campo email é obrigatório") 
     @Email 
     private String email;
 
     @Column(nullable = false)
-    @NotNull
+    @NotNull(message = "O campo tipo de contratacao é obrigatório")
     private String tipoContratacao;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
+    @NotNull(message = "O campo filialId é obrigatório")
     private Long filialId;  
     
     @Transient

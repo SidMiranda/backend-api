@@ -45,7 +45,6 @@ public class VendedorServiceTest {
         // Mocking MatriculaService
         // when(matriculaService.gerarMatricula("PJ")).thenReturn("12345678-PJ");
 
-        // Mocking VendedorRepository
         when(vendedorRepository.save(any(VendedorModel.class))).thenReturn(vendedor);
 
         VendedorModel result = vendedorService.criarVendedor(vendedor);
