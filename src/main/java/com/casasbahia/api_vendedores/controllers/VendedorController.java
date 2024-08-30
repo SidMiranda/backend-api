@@ -1,5 +1,6 @@
 package com.casasbahia.api_vendedores.controllers;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import com.casasbahia.api_vendedores.models.FilialModel;
 import com.casasbahia.api_vendedores.models.VendedorModel;
 import com.casasbahia.api_vendedores.services.VendedorService;
+import com.casasbahia.api_vendedores.dtos.VendedorDto;
 
 import com.casasbahia.api_vendedores.services.MatriculaService;
 
@@ -29,14 +31,18 @@ public class VendedorController {
     private MatriculaService matriculaService;
 
     @PostMapping
-    public ResponseEntity<VendedorModel> criarVendedor(@RequestBody VendedorModel vendedor){
-
-        // Gerar a matrícula antes de salvar o vendedor
-        vendedor.setMatricula(matriculaService.gerarMatricula(vendedor.getTipoContratacao()));
-
+    public ResponseEntity<VendedorModel> criarVendedor(@RequestBody VendedorDto vendedor){
+        
         try {
-            VendedorModel novoVendedor = vendedorService.criarVendedor(vendedor);
-            return new ResponseEntity<>(novoVendedor, HttpStatus.CREATED);
+            var vendedorModel = new VendedorModel();
+            BeanUtils.copyProperties(vendedor, vendedorModel);
+
+            // Gerar a matrícula antes de salvar o vendedor
+            vendedorModel.setMatricula(matriculaService.gerarMatricula(vendedorModel.getTipoContratacao()));
+
+        
+            vendedorService.criarVendedor(vendedorModel);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -46,6 +52,10 @@ public class VendedorController {
     public ResponseEntity<List<VendedorModel>> buscarTodos() {
         
         try {
+
+            // var vendedorModel = new VendedorModel();
+            // BeanUtils.copyProperties(vendedorDto, vendedorModel);
+
             List<VendedorModel> vendedores = vendedorService.buscarTodos();
             List<FilialModel> filiais = filialController.getFiliais();
             
